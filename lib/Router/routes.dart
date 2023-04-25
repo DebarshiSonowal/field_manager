@@ -7,5 +7,11 @@ class Routes {
 
   static const deviceCheckingDonePage = "/device_checking_done";
 
-  static const dashboardPage="/dashboard";
+  static const dashboardPage = "/dashboard";
+
+  static const attendancePage = "/attendance";
+
+  static const leavePage = "/leave";
+
+  static const morePage = "/more";
 }

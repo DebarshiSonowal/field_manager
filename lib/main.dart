@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Sizer(builder: (context, orientation, deviceType) {
         return Consumer<Repository>(builder: (context, Repository data, _) {
           return MaterialApp(
-            debugShowCheckedModeBanner: true,
+            debugShowCheckedModeBanner: false,
             title: 'Guwahati Plus',
             // darkTheme: AppTheme.getDarkTheme(),
             theme: data.isDark
