@@ -5,8 +5,10 @@ import 'package:field_manager/Functions/LoginPage/login_page.dart';
 import 'package:field_manager/Router/routes.dart';
 import 'package:flutter/material.dart';
 
+import '../Functions/Account/account_page.dart';
 import '../Functions/DeviceChecking/device_checking.dart';
 import '../Functions/Leave/leave_page.dart';
+import '../Functions/LeaveRequest/leave_request_page.dart';
 import '../Functions/More/more_page.dart';
 import '../Functions/SplashScreen/splash_screen.dart';
 import '../widgets/fade_transition.dart';
@@ -31,7 +33,15 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case Routes.leavePage:
       return FadeTransitionPageRouteBuilder(page: const LeavePage());
     case Routes.morePage:
-      return FadeTransitionPageRouteBuilder(page: const MorePage());
+      return FadeTransitionPageRouteBuilder(page: MorePage());
+
+    //account
+    case Routes.accountPage:
+      return FadeTransitionPageRouteBuilder(page: AccountPage());
+
+    //leave
+    case Routes.leaveRequestPage:
+      return FadeTransitionPageRouteBuilder(page: LeaveRequestPage());
 
     //default
     default:

@@ -14,4 +14,8 @@ class Routes {
   static const leavePage = "/leave";
 
   static const morePage = "/more";
+
+  static const accountPage = "/account";
+
+  static const leaveRequestPage = "/leaveRequest";
 }

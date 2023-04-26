@@ -1,6 +1,8 @@
+import 'package:field_manager/Navigation/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../Router/routes.dart';
 import '../../widgets/custom_bottom_navigation.dart';
 
 class LeavePage extends StatelessWidget {
@@ -23,8 +25,27 @@ class LeavePage extends StatelessWidget {
         ),
       ),
       backgroundColor: Colors.white,
-      body: Container(),
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        color: Colors.white,
+        child: Center(
+          child: Text("No Request",style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: Colors.black,
+          ),),
+        ),
+      ),
       bottomNavigationBar: const CustomBottomNavigation(),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.purple,
+        onPressed: () {
+          Navigation.instance.navigate(Routes.leaveRequestPage);
+        },
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 }

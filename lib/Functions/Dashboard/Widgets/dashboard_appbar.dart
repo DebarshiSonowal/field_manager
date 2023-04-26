@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../Navigation/navigation.dart';
+import '../../../Router/routes.dart';
+
 class DashboardAppbar extends StatelessWidget {
   const DashboardAppbar({
     super.key,
@@ -22,11 +25,16 @@ class DashboardAppbar extends StatelessWidget {
           ),
         ),
         // padding: EdgeInsets.all(1.w),
-        child: const Icon(
-          Icons.people,
-          color: Colors.white,
-          // size: 18.sp,
-          // fill: 1,
+        child: IconButton(
+          onPressed: (){
+            Navigation.instance.navigate(Routes.accountPage);
+          },
+          icon: const Icon(
+            Icons.people,
+            color: Colors.white,
+            // size: 18.sp,
+            // fill: 1,
+          ),
         ),
       ),
       title: Text(
