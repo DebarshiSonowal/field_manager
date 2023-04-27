@@ -5,8 +5,10 @@ class LeaveDateItem extends StatelessWidget {
   const LeaveDateItem({
     super.key,
     required this.dateFrom,
+    this.icon,
   });
 
+  final IconData? icon;
   final String dateFrom;
 
   @override
@@ -26,20 +28,23 @@ class LeaveDateItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(
-            Icons.calendar_month,
+          Icon(
+            icon ?? Icons.calendar_month,
             color: Colors.black,
           ),
           SizedBox(
-            width: 4.w,
+            width: 6.w,
           ),
-          Text(
-            dateFrom,
-            style:
-            Theme.of(context).textTheme.headlineMedium?.copyWith(
-              color: Colors.black,
-              fontSize: 14.sp,
-              // fontWeight: FontWeight.bold,
+          SizedBox(
+            width: 70.w,
+            child: Text(
+              dateFrom,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    color: Colors.black,
+                    fontSize: 14.sp,
+                    // fontWeight: FontWeight.bold,
+                  ),
             ),
           ),
         ],

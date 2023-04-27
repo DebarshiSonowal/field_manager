@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:field_manager/Repository/Repository.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../Navigation/navigation.dart';
+import '../../widgets/rounded_corner_button.dart';
 
 class AccountPage extends StatelessWidget {
   AccountPage({Key? key}) : super(key: key);
@@ -57,7 +59,7 @@ class AccountPage extends StatelessWidget {
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                        image: NetworkImage(
+                        image: CachedNetworkImageProvider(
                             'https://googleflutter.com/sample_image.jpg'),
                         fit: BoxFit.fill),
                   ),
@@ -262,43 +264,13 @@ class AccountPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                Card(
-                  // margin: EdgeInsets.symmetric(
-                  //     horizontal: 3.w, vertical: 1.h),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25)),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.deepPurple,
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      vertical: 1.h,
-                      horizontal: 5.w,
-                    ),
-                    height: 5.h,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "Logout",
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Colors.white,
-                                    fontSize: 14.sp,
-                                  ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                RoundedCornerButton(txt: "Logout", onClick: () {}),
                 Text(
                   "V 1.0",
-                  style:
-                  Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.black,
-                    fontSize: 13.sp,
-                  ),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.black,
+                        fontSize: 13.sp,
+                      ),
                 ),
               ],
             ),
@@ -308,3 +280,5 @@ class AccountPage extends StatelessWidget {
     );
   }
 }
+
+

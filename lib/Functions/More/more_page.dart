@@ -1,3 +1,5 @@
+import 'package:field_manager/Navigation/navigation.dart';
+import 'package:field_manager/Router/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -8,9 +10,15 @@ class MorePage extends StatelessWidget {
   MorePage({Key? key}) : super(key: key);
 
   var list = [
-      More(name: "Expanses",icon: Icons.calculate),
-      More(name: "Sign Board Request",icon: Icons.assignment),
-      More(name: "Clients",icon: Icons.people),
+      More(name: "Expanses",icon: Icons.calculate,function: (){
+        Navigation.instance.navigate(Routes.expensesPage);
+      }),
+      More(name: "Sign Board Request",icon: Icons.assignment,function: (){
+        Navigation.instance.navigate(Routes.requestSignBoardPage);
+      }),
+      More(name: "Clients",icon: Icons.people,function: (){
+        Navigation.instance.navigate(Routes.clientsPage);
+      }),
   ];
   @override
   Widget build(BuildContext context) {
@@ -68,7 +76,7 @@ class MorePage extends StatelessWidget {
                   color: Colors.black,
                   size: 12.sp,
                 ),
-                onPressed: () {},
+                onPressed: ()=>item.function(),
               ),
             );
           },

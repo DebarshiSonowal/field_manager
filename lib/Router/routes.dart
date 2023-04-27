@@ -18,4 +18,14 @@ class Routes {
   static const accountPage = "/account";
 
   static const leaveRequestPage = "/leaveRequest";
+
+  static const expensesPage = "/expenses";
+
+  static const createExpensesPage = "/create_expenses";
+
+  static const requestSignBoardPage = "/request_sign_board";
+
+  static const clientsPage = "/clients_page";
+
+  static const createClientsPage = "/create_clients_page";
 }

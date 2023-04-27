@@ -1,11 +1,16 @@
 import 'package:field_manager/Functions/Attendance/attendance_page.dart';
 import 'package:field_manager/Functions/Dashboard/dashboard_page.dart';
 import 'package:field_manager/Functions/DeviceChecking/device_checking_done.dart';
+import 'package:field_manager/Functions/Expanses/expenses_page.dart';
 import 'package:field_manager/Functions/LoginPage/login_page.dart';
+import 'package:field_manager/Functions/RequestSignBoard/request_sign_board_page.dart';
 import 'package:field_manager/Router/routes.dart';
 import 'package:flutter/material.dart';
 
 import '../Functions/Account/account_page.dart';
+import '../Functions/Clients/clients_page.dart';
+import '../Functions/CreateClients/create_clients_page.dart';
+import '../Functions/CreateExpense/create_expense_page.dart';
 import '../Functions/DeviceChecking/device_checking.dart';
 import '../Functions/Leave/leave_page.dart';
 import '../Functions/LeaveRequest/leave_request_page.dart';
@@ -41,7 +46,23 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     //leave
     case Routes.leaveRequestPage:
-      return FadeTransitionPageRouteBuilder(page: LeaveRequestPage());
+      return FadeTransitionPageRouteBuilder(page: const LeaveRequestPage());
+
+    //expenses
+    case Routes.expensesPage:
+      return FadeTransitionPageRouteBuilder(page: const Expenses_page());
+    case Routes.createExpensesPage:
+      return FadeTransitionPageRouteBuilder(page: const CreateExpensePage());
+
+    //request signboard
+    case Routes.requestSignBoardPage:
+      return FadeTransitionPageRouteBuilder(page: const RequestSignBoardPage());
+
+    //clients
+    case Routes.clientsPage:
+      return FadeTransitionPageRouteBuilder(page: ClientsPage());
+    case Routes.createClientsPage:
+      return FadeTransitionPageRouteBuilder(page: const CreateClientsPage());
 
     //default
     default:
