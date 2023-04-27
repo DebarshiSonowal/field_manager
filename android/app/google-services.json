@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "466542701557",
+    "project_id": "fieldmanagertechsavvy",
+    "storage_bucket": "fieldmanagertechsavvy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:466542701557:android:9d9bd8e4ec05e064e24ebc",
+        "android_client_info": {
+          "package_name": "com.techsavvy.field_manager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "466542701557-mdq5jkd9h1hlv1mrup216o1vjqffs9ss.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6ds6RNSh3hveJSLQKDHxdlPYzuIGm82M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "466542701557-mdq5jkd9h1hlv1mrup216o1vjqffs9ss.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
