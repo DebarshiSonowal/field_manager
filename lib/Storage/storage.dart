@@ -17,6 +17,7 @@ class LocalStorage {
   }
 
   get filters => sharedPreferences.getString("filter") ?? "";
+  get token => sharedPreferences.getString("token") ?? "";
 
   // void logout() {}
   Future<void> logout() async {
