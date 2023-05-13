@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../Navigation/navigation.dart';
 import '../../Router/routes.dart';
+import '../../Storage/storage.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -34,7 +35,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3),
-        () => Navigation.instance.navigateAndRemoveUntil(Routes.loginPage));
+    Future.delayed(const Duration(seconds: 3), () {
+      if (LocalStorage.instance.isLoggedIn) {
+        Navigation.instance.navigateAndRemoveUntil(Routes.dashboardPage);
+      } else {
+        Navigation.instance.navigateAndRemoveUntil(Routes.loginPage);
+        // Navigation.instance.navigate(Routes.deviceCheckingPage);
+      }
+    });
   }
 }

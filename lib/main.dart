@@ -1,6 +1,7 @@
 import 'package:field_manager/Repository/Repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -14,7 +15,7 @@ void main() async {
   LocalStorage.instance.initializeStorage();
   await dotenv.load();
   runApp(const MyApp());
-}
+} 
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -67,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
             themeMode: ThemeMode.system,
             navigatorKey: Navigation.instance.navigatorKey,
             onGenerateRoute: generateRoute,
+            builder: EasyLoading.init(),
           );
         });
       }),

@@ -4,7 +4,7 @@ class LoginResponse {
 
   LoginResponse.fromJson(json) {
     error = json["error"] ?? true;
-    message = json['data']["message"] ?? "";
+    message = json["message"] ?? "";
     token = json['data']["token"] ?? "";
     username = json['data']["username"] ?? "";
   }

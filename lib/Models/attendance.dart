@@ -14,11 +14,11 @@ class Attendance {
 
   Attendance.fromJson(json) {
     present = json["present"] ?? 0;
-    halfDay = json["half_day"] ?? 0;
+    halfDay = json["halfDay"] ?? 0;
     absent = json["absent"] ?? 0;
     onLeave = json["on_leave"] ?? 0;
     available = json["available"] ?? 0;
-    weeklyOff = json["weekly_off"] ?? 0;
+    weeklyOff = json["weeklyOff"] ?? 0;
   }
 }
 
@@ -28,7 +28,7 @@ class AttendanceResponse{
 
   AttendanceResponse.fromJson(json){
     error = json["error"]??true;
-    data = json["data"];
+    data = Attendance.fromJson(json["data"]["attendanceInfo"]);
   }
 
   AttendanceResponse.withError(msg){
