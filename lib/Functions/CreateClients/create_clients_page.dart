@@ -274,6 +274,9 @@ class _CreateClientsPageState extends State<CreateClientsPage> {
                   child: LeaveDateItem(
                     dateFrom: location ?? "Location",
                     icon: Icons.location_city,
+                    updateDate: (String val) {
+
+                    },
                   ),
                 ),
                 Container(

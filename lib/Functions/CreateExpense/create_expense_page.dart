@@ -78,7 +78,10 @@ class _CreateExpensePageState extends State<CreateExpensePage> {
                     if (!mounted) return;
                     pickUpDate(context);
                   },
-                  child: LeaveDateItem(dateFrom: dateFrom),
+                  child: LeaveDateItem(
+                    dateFrom: dateFrom,
+                    updateDate: (String val) {},
+                  ),
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(
@@ -278,6 +281,7 @@ class _CreateExpensePageState extends State<CreateExpensePage> {
                   child: LeaveDateItem(
                     dateFrom: filename?.path.split("/").last ?? "Choose Image",
                     icon: Icons.file_present,
+                    updateDate: (String val) {},
                   ),
                 ),
                 SizedBox(
@@ -336,8 +340,8 @@ class _CreateExpensePageState extends State<CreateExpensePage> {
     );
     if (results!.isNotEmpty) {
       setState(() {
-            dateFrom = DateFormat("dd/MM/yyyy").format(results[0]!);
-          });
+        dateFrom = DateFormat("dd/MM/yyyy").format(results[0]!);
+      });
     }
   }
 }

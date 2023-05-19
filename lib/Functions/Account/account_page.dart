@@ -4,6 +4,7 @@ import 'package:cherry_toast/resources/arrays.dart';
 import 'package:field_manager/Api/api_provider.dart';
 import 'package:field_manager/Repository/Repository.dart';
 import 'package:field_manager/Router/routes.dart';
+import 'package:field_manager/Storage/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
@@ -269,9 +270,11 @@ class AccountPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                RoundedCornerButton(txt: "Logout", onClick: () {
-                  initiateLogout(context);
-                }),
+                RoundedCornerButton(
+                    txt: "Logout",
+                    onClick: () {
+                      initiateLogout(context);
+                    }),
                 Text(
                   "V 1.0",
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -287,66 +290,69 @@ class AccountPage extends StatelessWidget {
     );
   }
 
-  void initiateLogout(context) async{
+  void initiateLogout(context) async {
     EasyLoading.show(status: 'loading...');
     final response = await ApiProvider.instance.logOut();
-    if(response.error??true){
+    if (response.error ?? true) {
       EasyLoading.dismiss(animation: true);
       if (!context.mounted) {
         return;
       }
       CherryToast.error(
-          title: Text(
-            "Oops! Logout Failed",
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.red,
-              fontWeight: FontWeight.bold,
-              fontSize: 14.sp,
-            ),
-          ),
-          displayTitle: true,
-          description: Text(
-            response.message ?? "Something went wrong",
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.black45,
-              fontSize: 10.sp,
-            ),
-          ),
-          animationType: AnimationType.fromTop,
-          animationDuration: const Duration(milliseconds: 1000),
-          autoDismiss: true)
+              title: Text(
+                "Oops! Logout Failed",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.sp,
+                    ),
+              ),
+              displayTitle: true,
+              description: Text(
+                response.message ?? "Something went wrong",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.black45,
+                      fontSize: 10.sp,
+                    ),
+              ),
+              animationType: AnimationType.fromTop,
+              animationDuration: const Duration(milliseconds: 1000),
+              autoDismiss: true)
           .show(context);
-    }else{
+      LocalStorage.instance.logout();
+      Future.delayed(const Duration(seconds: 1), () {
+        Navigation.instance.navigateAndRemoveUntil(Routes.loginPage);
+      });
+    } else {
       EasyLoading.dismiss(animation: true);
       if (!context.mounted) {
         return;
       }
       CherryToast.success(
-          title: Text(
-            "Logged out",
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.green,
-              fontWeight: FontWeight.bold,
-              fontSize: 14.sp,
-            ),
-          ),
-          displayTitle: true,
-          description: Text(
-            response.message ?? "Successfully ",
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.black45,
-              fontSize: 10.sp,
-            ),
-          ),
-          animationType: AnimationType.fromTop,
-          animationDuration: const Duration(milliseconds: 1000),
-          autoDismiss: true)
+              title: Text(
+                "Logged out",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.sp,
+                    ),
+              ),
+              displayTitle: true,
+              description: Text(
+                response.message ?? "Successfully ",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.black45,
+                      fontSize: 10.sp,
+                    ),
+              ),
+              animationType: AnimationType.fromTop,
+              animationDuration: const Duration(milliseconds: 1000),
+              autoDismiss: true)
           .show(context);
-      Future.delayed(const Duration(seconds:1),(){
+      LocalStorage.instance.logout();
+      Future.delayed(const Duration(seconds: 1), () {
         Navigation.instance.navigateAndRemoveUntil(Routes.loginPage);
       });
     }
   }
 }
-
-

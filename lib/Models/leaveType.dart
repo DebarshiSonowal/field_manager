@@ -18,9 +18,9 @@ class LeaveResponse {
 
   LeaveResponse.fromJson(json) {
     error = json["error"] ?? true;
-    leaveTypes = json["data"]["leaveTypes"] == null
+    leaveTypes = json["data"]["leaveType"] == null
         ? []
-        : (json["data"]["leaveTypes"] as List)
+        : (json["data"]["leaveType"] as List)
             .map((e) => LeaveType.fromJson(e))
             .toList();
   }

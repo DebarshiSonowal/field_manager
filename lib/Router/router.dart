@@ -34,7 +34,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case Routes.dashboardPage:
       return FadeTransitionPageRouteBuilder(page: const DashboardPage());
     case Routes.attendancePage:
-      return FadeTransitionPageRouteBuilder(page: const AttendancePage());
+      return FadeTransitionPageRouteBuilder(page: AttendancePage());
     case Routes.leavePage:
       return FadeTransitionPageRouteBuilder(page: const LeavePage());
     case Routes.morePage:

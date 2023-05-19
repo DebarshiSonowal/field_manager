@@ -156,7 +156,71 @@ class LoginCard extends StatelessWidget {
               CustomButton(
                 title: "Login",
                 onClick: () {
-                  login(emailController.text, passwordController.text, context);
+                  if (emailController.text.isNotEmpty &&
+                      passwordController.text.isNotEmpty) {
+                    if (isEmail(emailController.text)) {
+                      login(emailController.text, passwordController.text,
+                          context);
+                    } else {
+                      CherryToast.error(
+                              title: Text(
+                                "Oops! Wrong Email",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14.sp,
+                                    ),
+                              ),
+                              displayTitle: true,
+                              description: Text(
+                                "Please enter your email",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: Colors.black45,
+                                      fontSize: 10.sp,
+                                    ),
+                              ),
+                              animationType: AnimationType.fromTop,
+                              animationDuration:
+                                  const Duration(milliseconds: 1000),
+                              autoDismiss: true)
+                          .show(context);
+                    }
+                  } else {
+                    CherryToast.error(
+                            title: Text(
+                              "Oops! Empty fields",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14.sp,
+                                  ),
+                            ),
+                            displayTitle: true,
+                            description: Text(
+                              "Please fill all the fields",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color: Colors.black45,
+                                    fontSize: 10.sp,
+                                  ),
+                            ),
+                            animationType: AnimationType.fromTop,
+                            animationDuration:
+                                const Duration(milliseconds: 1000),
+                            autoDismiss: true)
+                        .show(context);
+                  }
                 },
               ),
               SizedBox(
@@ -174,6 +238,15 @@ class LoginCard extends StatelessWidget {
         ),
       );
     });
+  }
+
+  bool isEmail(String em) {
+    String p =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+
+    RegExp regExp = RegExp(p);
+
+    return regExp.hasMatch(em);
   }
 
   void login(String email, String password, BuildContext context) async {
@@ -231,7 +304,7 @@ class LoginCard extends StatelessWidget {
               animationDuration: const Duration(milliseconds: 1000),
               autoDismiss: true)
           .show(context);
-      Future.delayed(const Duration(seconds: 1),(){
+      Future.delayed(const Duration(seconds: 1), () {
         LocalStorage.instance.setUser(response.token!);
         Navigation.instance.navigate(Routes.deviceCheckingPage);
       });

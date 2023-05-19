@@ -79,7 +79,7 @@ class _DeviceCheckingDoneState extends State<DeviceCheckingDone> {
               CustomButton(
                 title: "Ok",
                 onClick: (){
-                  Navigation.instance.navigate(Routes.dashboardPage);
+                  Navigation.instance.navigateAndRemoveUntil(Routes.dashboardPage);
                 },
               ),
             ],

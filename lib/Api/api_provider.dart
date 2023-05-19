@@ -264,7 +264,7 @@ class ApiProvider {
   }
 
   Future<GenericResponse> addLeaveRequest(
-      String fromDate,String toDate,String leaveType,String comments) async {
+      String fromDate,String toDate,int leaveType,String comments) async {
     BaseOptions option = BaseOptions(
         connectTimeout: const Duration(seconds: 8),
         receiveTimeout: const Duration(seconds: 8),
@@ -320,7 +320,7 @@ class ApiProvider {
     // debugPrint(jsonEncode(data));
 
     try {
-      Response? response = await dio?.post(url);
+      Response? response = await dio?.get(url);
       debugPrint("getAllLeaveType response: ${response?.data}");
       if (response?.statusCode == 200 || response?.statusCode == 201) {
         return LeaveResponse.fromJson(response?.data);

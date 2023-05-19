@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import '../Models/attendance.dart';
+import '../Models/leaveType.dart';
 import '../Models/user_shift.dart';
 
 class Repository extends ChangeNotifier {
@@ -8,11 +9,22 @@ class Repository extends ChangeNotifier {
   late int _index;
   Attendance? _attendance;
   UserShift? _userShift;
-
+  bool? _isCheckedIn;
+  List<LeaveType> _leaveTypes=[];
   Repository() {
     _isDark = false;
     _notification = false;
     _index = 0;
+  }
+
+  void setCheckedIn(bool val) {
+    _isCheckedIn = val;
+    notifyListeners();
+  }
+
+  void setTypeOfLeaves(List<LeaveType> val) {
+    _leaveTypes = val;
+    notifyListeners();
   }
 
   void setAttendance(Attendance data) {
@@ -45,6 +57,10 @@ class Repository extends ChangeNotifier {
   bool get isDark => _isDark;
 
   bool get notification => _notification;
+
+  List<LeaveType> get leaveTypes => _leaveTypes;
+
+  bool get isCheckedIn => _isCheckedIn ?? false;
 
   Attendance? get getAttendance => _attendance;
 

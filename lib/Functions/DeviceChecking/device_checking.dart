@@ -96,11 +96,11 @@ class _DeviceCheckingState extends State<DeviceChecking> {
       String imeiNo = await DeviceInformation.deviceIMEINumber;
       debugPrint(imeiNo);
       Future.delayed(const Duration(seconds: 3,),(){
-        Navigation.instance.navigateAndReplace(Routes.deviceCheckingDonePage);
+        Navigation.instance.navigate(Routes.deviceCheckingDonePage);
       });
     }else{
       Future.delayed(const Duration(seconds: 3,),(){
-        Navigation.instance.navigateAndReplace(Routes.deviceCheckingDonePage);
+        Navigation.instance.navigate(Routes.deviceCheckingDonePage);
       });
     }
 
