@@ -12,8 +12,8 @@ class TemporaryData{
       Attendance(title: "Available Leave",val: 10),
   ];
   static final expenseList=[
-    Expense(title: "Approved",val:0),
-    Expense(title: "Pending",val:0),
-    Expense(title: "Rejected",val:0),
+    ExpenseDemo(title: "Approved",val:0),
+    ExpenseDemo(title: "Pending",val:0),
+    ExpenseDemo(title: "Rejected",val:0),
   ];
 }

@@ -3,12 +3,17 @@ import 'dart:io';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cherry_toast/resources/arrays.dart';
+import 'package:field_manager/Api/api_provider.dart';
+import 'package:field_manager/Repository/Repository.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../Models/expense.dart';
 import '../../Navigation/navigation.dart';
 import '../../widgets/rounded_corner_button.dart';
 import '../LeaveRequest/Widgets/leave_date_item.dart';
@@ -22,7 +27,7 @@ class CreateExpensePage extends StatefulWidget {
 
 class _CreateExpensePageState extends State<CreateExpensePage> {
   String dateFrom = "Date";
-  String? selected;
+  int? selected;
   final amountsController = TextEditingController();
   final remarksController = TextEditingController();
 
@@ -35,6 +40,12 @@ class _CreateExpensePageState extends State<CreateExpensePage> {
     amountsController.dispose();
     remarksController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchExpense();
   }
 
   @override
@@ -62,7 +73,7 @@ class _CreateExpensePageState extends State<CreateExpensePage> {
               ),
         ),
       ),
-      body: Builder(builder: (context) {
+      body: Consumer<Repository>(builder: (context, data, _) {
         return Container(
           padding: EdgeInsets.symmetric(
             vertical: 1.h,
@@ -73,15 +84,16 @@ class _CreateExpensePageState extends State<CreateExpensePage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    if (!mounted) return;
-                    pickUpDate(context);
+                LeaveDateItem(
+                  dateFrom: dateFrom,
+                  updateDate: (String val) {
+                    if (val != "") {
+                      setState(() {
+                        dateFrom = DateFormat("yyyy-MM-dd")
+                            .format(DateTime.parse(val));
+                      });
+                    }
                   },
-                  child: LeaveDateItem(
-                    dateFrom: dateFrom,
-                    updateDate: (String val) {},
-                  ),
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(
@@ -108,17 +120,14 @@ class _CreateExpensePageState extends State<CreateExpensePage> {
                       SizedBox(
                         width: 75.w,
                         child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
+                          child: DropdownButton<int>(
                             value: selected,
-                            items: <String>[
-                              'Food',
-                              'Travel',
-                              'Others',
-                            ].map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
+                            items:
+                                data.getExpenseTypes.map((ExpenseType value) {
+                              return DropdownMenuItem<int>(
+                                value: value.id,
                                 child: Text(
-                                  value,
+                                  value.expenseName ?? "",
                                   style: Theme.of(context)
                                       .textTheme
                                       .headlineMedium
@@ -243,7 +252,7 @@ class _CreateExpensePageState extends State<CreateExpensePage> {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    if (await Permission.storage.request().isGranted) {
+                    if (await Permission.photos.request().isGranted) {
                       if (!mounted) return;
                       pickFile(context);
                     } else {
@@ -278,16 +287,98 @@ class _CreateExpensePageState extends State<CreateExpensePage> {
                           .show(context);
                     }
                   },
-                  child: LeaveDateItem(
-                    dateFrom: filename?.path.split("/").last ?? "Choose Image",
-                    icon: Icons.file_present,
-                    updateDate: (String val) {},
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 3.w,
+                      vertical: 2.h,
+                    ),
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 2.w,
+                      vertical: 0.5.h,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    //  dateFrom: filename?.path.split("/").last ?? "Choose Image",
+                    //                     icon: Icons.file_present,
+                    //                     updateDate: (String val) {},
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.file_present,
+                          color: Colors.black,
+                        ),
+                        SizedBox(
+                          width: 6.w,
+                        ),
+                        SizedBox(
+                          width: 70.w,
+                          child: Text(
+                            filename?.path.split("/").last ?? "Choose Image",
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineMedium
+                                ?.copyWith(
+                                  color: Colors.black,
+                                  fontSize: 14.sp,
+                                  // fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(
                   height: 1.h,
                 ),
-                RoundedCornerButton(txt: "Submit", onClick: () {}),
+                RoundedCornerButton(
+                    txt: "Submit",
+                    onClick: () {
+                      if (dateFrom != "Date" &&
+                          selected != null &&
+                          amountsController.text.isNotEmpty &&
+                          remarksController.text.isNotEmpty &&
+                          filename != null) {
+                        submitExpense(
+                            dateFrom,
+                            selected,
+                            amountsController.text,
+                            remarksController.text,
+                            filename!.path);
+                      } else {
+                        CherryToast.error(
+                                title: Text(
+                                  "Oops! Adding Expense Failed",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14.sp,
+                                      ),
+                                ),
+                                displayTitle: true,
+                                description: Text(
+                                  "Please fill all the fields",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        color: Colors.black45,
+                                        fontSize: 10.sp,
+                                      ),
+                                ),
+                                animationType: AnimationType.fromTop,
+                                animationDuration:
+                                    const Duration(milliseconds: 1000),
+                                autoDismiss: true)
+                            .show(context);
+                      }
+                    }),
               ],
             ),
           ),
@@ -298,7 +389,6 @@ class _CreateExpensePageState extends State<CreateExpensePage> {
 
   void pickFile(context) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
-
     if (result != null) {
       setState(() {
         filename = File(result.files.single.path!);
@@ -329,7 +419,7 @@ class _CreateExpensePageState extends State<CreateExpensePage> {
   }
 
   Future<void> pickUpDate(BuildContext context) async {
-    List<DateTime?>? results = await showCalendarDatePicker2Dialog(
+    var results = await showCalendarDatePicker2Dialog(
       context: context,
       config: CalendarDatePicker2WithActionButtonsConfig(
         calendarType: CalendarDatePicker2Type.single,
@@ -338,10 +428,91 @@ class _CreateExpensePageState extends State<CreateExpensePage> {
       value: _dates,
       borderRadius: BorderRadius.circular(15),
     );
+    debugPrint("Date Picked ${results?.length ?? 099}");
+    debugPrint("Date Picked ${_dates}");
     if (results!.isNotEmpty) {
       setState(() {
         dateFrom = DateFormat("dd/MM/yyyy").format(results[0]!);
       });
+    }
+  }
+
+  void fetchExpense() async {
+    EasyLoading.show(status: 'loading...');
+    final response = await ApiProvider.instance.getAllExpenseType();
+    if (response.error ?? true) {
+      EasyLoading.dismiss(animation: true);
+      if (!context.mounted) {
+        return;
+      }
+    } else {
+      EasyLoading.dismiss(animation: true);
+      if (!context.mounted) {
+        return;
+      }
+      Provider.of<Repository>(context, listen: false)
+          .setTypesOfExpenses(response.expenseTypes);
+    }
+  }
+
+  void submitExpense(String date, int? selected, String amount, String remark,
+      String path) async {
+    EasyLoading.show(status: 'loading...');
+    final response = await ApiProvider.instance
+        .addExpenseRequest(date, selected, amount, remark, path);
+    if (response.error ?? true) {
+      EasyLoading.dismiss(animation: true);
+      if (!context.mounted) {
+        return;
+      }
+      CherryToast.error(
+              title: Text(
+                "Oops! Expense request failed",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.sp,
+                    ),
+              ),
+              displayTitle: true,
+              description: Text(
+                response.message ?? "Something went wrong",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.black45,
+                      fontSize: 10.sp,
+                    ),
+              ),
+              animationType: AnimationType.fromTop,
+              animationDuration: const Duration(milliseconds: 1000),
+              autoDismiss: true)
+          .show(context);
+    } else {
+      EasyLoading.dismiss(animation: true);
+      if (!context.mounted) {
+        return;
+      }
+      CherryToast.success(
+              title: Text(
+                "Expense request added successfully",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.sp,
+                    ),
+              ),
+              displayTitle: true,
+              description: Text(
+                response.message ?? "Successfully ",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.black45,
+                      fontSize: 10.sp,
+                    ),
+              ),
+              animationType: AnimationType.fromTop,
+              animationDuration: const Duration(milliseconds: 10),
+              autoDismiss: true)
+          .show(context);
+      Future.delayed(const Duration(seconds: 4), () => Navigation.instance.goBack());
     }
   }
 }

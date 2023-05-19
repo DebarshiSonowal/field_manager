@@ -1,9 +1,13 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:field_manager/Models/client.dart';
 import 'package:flutter/material.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 
 import '../Models/attendance.dart';
+import '../Models/expense.dart';
 import '../Models/generic_response.dart';
 import '../Models/leaveType.dart';
 import '../Models/login.dart';
@@ -22,7 +26,7 @@ class ApiProvider {
 
   Dio? dio;
 
-  Future<LoginResponse> login(String email,String password) async {
+  Future<LoginResponse> login(String email, String password) async {
     var data = {
       'email': email,
       'password': password,
@@ -90,7 +94,6 @@ class ApiProvider {
       return LogoutResponse.withError(e.message);
     }
   }
-
 
   Future<GenericResponse> checkOut() async {
     BaseOptions option = BaseOptions(
@@ -185,7 +188,8 @@ class ApiProvider {
     }
   }
 
-  Future<GenericResponse> checkIn(String checInLocation,double lat,double lang) async {
+  Future<GenericResponse> checkIn(
+      String checInLocation, double lat, double lang) async {
     BaseOptions option = BaseOptions(
         connectTimeout: const Duration(seconds: 8),
         receiveTimeout: const Duration(seconds: 8),
@@ -224,7 +228,8 @@ class ApiProvider {
     }
   }
 
-  Future<GenericResponse> updateLocation(String checInLocation,double lat,double lang) async {
+  Future<GenericResponse> updateLocation(
+      String checInLocation, double lat, double lang) async {
     BaseOptions option = BaseOptions(
         connectTimeout: const Duration(seconds: 8),
         receiveTimeout: const Duration(seconds: 8),
@@ -264,7 +269,7 @@ class ApiProvider {
   }
 
   Future<GenericResponse> addLeaveRequest(
-      String fromDate,String toDate,int leaveType,String comments) async {
+      String fromDate, String toDate, int leaveType, String comments) async {
     BaseOptions option = BaseOptions(
         connectTimeout: const Duration(seconds: 8),
         receiveTimeout: const Duration(seconds: 8),
@@ -335,4 +340,147 @@ class ApiProvider {
     }
   }
 
+  Future<ExpenseTypeResponse> getAllExpenseType() async {
+    BaseOptions option = BaseOptions(
+        connectTimeout: const Duration(seconds: 8),
+        receiveTimeout: const Duration(seconds: 8),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${LocalStorage.instance.token}'
+          // 'APP-KEY': ConstanceData.app_key
+        });
+    var url = "$baseUrl/$path/user/getAllExpenseType";
+    dio = Dio(option);
+    debugPrint(url.toString());
+    // debugPrint(jsonEncode(data));
+
+    try {
+      Response? response = await dio?.get(url);
+      debugPrint("ExpenseTypeResponse response: ${response?.data}");
+      if (response?.statusCode == 200 || response?.statusCode == 201) {
+        return ExpenseTypeResponse.fromJson(response?.data);
+      } else {
+        debugPrint("ExpenseTypeResponse  error: ${response?.data}");
+        return ExpenseTypeResponse.withError(
+            response?.data['message'] ?? "Something went wrong");
+      }
+    } on DioError catch (e) {
+      debugPrint("ExpenseTypeResponse response: ${e.response}");
+      return ExpenseTypeResponse.withError(e.message);
+    }
+  }
+
+  Future<ExpenseResponse> getAllExpenses() async {
+    BaseOptions option = BaseOptions(
+        connectTimeout: const Duration(seconds: 8),
+        receiveTimeout: const Duration(seconds: 8),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${LocalStorage.instance.token}'
+          // 'APP-KEY': ConstanceData.app_key
+        });
+    var url = "$baseUrl/$path/user/getExpensesByEmp";
+    dio = Dio(option);
+    debugPrint(url.toString());
+    // debugPrint(jsonEncode(data));
+
+    try {
+      Response? response = await dio?.get(url);
+      debugPrint("ExpenseResponse response: ${response?.data}");
+      if (response?.statusCode == 200 || response?.statusCode == 201) {
+        return ExpenseResponse.fromJson(response?.data);
+      } else {
+        debugPrint("ExpenseResponse  error: ${response?.data}");
+        return ExpenseResponse.withError(
+            response?.data['message'] ?? "Something went wrong");
+      }
+    } on DioError catch (e) {
+      debugPrint("ExpenseResponse response: ${e.response}");
+      return ExpenseResponse.withError(e.message);
+    }
+  }
+
+  Future<ClientResponse> getClients() async {
+    BaseOptions option = BaseOptions(
+        connectTimeout: const Duration(seconds: 8),
+        receiveTimeout: const Duration(seconds: 8),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${LocalStorage.instance.token}'
+          // 'APP-KEY': ConstanceData.app_key
+        });
+    var url = "$baseUrl/$path/user/getAllClient";
+    dio = Dio(option);
+    debugPrint(url.toString());
+    // debugPrint(jsonEncode(data));
+
+    try {
+      Response? response = await dio?.get(url);
+      debugPrint("ClientResponse response: ${response?.data}");
+      if (response?.statusCode == 200 || response?.statusCode == 201) {
+        return ClientResponse.fromJson(response?.data);
+      } else {
+        debugPrint("ClientResponse  error: ${response?.data}");
+        return ClientResponse.withError(
+            response?.data['message'] ?? "Something went wrong");
+      }
+    } on DioError catch (e) {
+      debugPrint("ClientResponse response: ${e.response}");
+      return ClientResponse.withError(e.message);
+    }
+  }
+
+  Future<GenericResponse> addExpenseRequest(String date, int? selected,
+      String amount, String remark, String proof) async {
+    BaseOptions option = BaseOptions(
+        connectTimeout: const Duration(seconds: 8),
+        receiveTimeout: const Duration(seconds: 8),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${LocalStorage.instance.token}'
+          // 'APP-KEY': ConstanceData.app_key
+        });
+    FormData data = FormData.fromMap({
+      'applied_on': date,
+      'expense_type': selected,
+      'amount': amount,
+      'remarks': remark,
+      // 'proof':proof,
+    });
+    var type = lookupMimeType(proof, headerBytes: [0xFF, 0xD8])!;
+    MultipartFile file = await MultipartFile.fromFile(
+      proof,
+      filename: proof.split("/").last,
+      contentType:
+          MediaType(type.split('/').first, type.split('/').last), //important
+    );
+    // data[''] = file;
+    data.files.add(MapEntry('proof', file));
+    var url = "$baseUrl/$path/user/addExpences";
+    dio = Dio(option);
+    debugPrint(url.toString());
+    // debugPrint(jsonEncode(data));
+
+    try {
+      Response? response = await dio?.post(
+        url,
+        data: data,
+      );
+      debugPrint("addExpenseRequest Response : ${response?.data}");
+      if (response?.statusCode == 200 || response?.statusCode == 201) {
+        return GenericResponse.fromJson(response?.data);
+      } else {
+        debugPrint("addExpenseRequest Response  error: ${response?.data}");
+        return GenericResponse.withError(
+            response?.data['message'] ?? "Something went wrong");
+      }
+    } on DioError catch (e) {
+      debugPrint("addExpenseRequest Response error: ${e.response}");
+      return GenericResponse.withError(e.message);
+    }
+  }
 }

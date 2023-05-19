@@ -73,7 +73,12 @@ class _DashboardPageState extends State<DashboardPage> {
 
   void fetchDetails(BuildContext context) async {
     await fetchAttendance(context);
+    if(!context.mounted)return;
     await fetchShift(context);
+    if(!context.mounted)return;
+    await fetchExpense(context);
+    if(!context.mounted)return;
+    await fetchClients(context);
   }
 
   fetchAttendance(BuildContext context) async {
@@ -96,6 +101,38 @@ class _DashboardPageState extends State<DashboardPage> {
   fetchShift(BuildContext context) async{
     final response = await ApiProvider.instance.getUserShift();
     if(response.error??true){
+      // EasyLoading.dismiss(animation: true);
+      // return;
+    }else{
+      // EasyLoading.dismiss(animation: true);
+      if (!context.mounted) {
+        return;
+      }
+      Provider.of<Repository>(context, listen: false)
+          .setUserShift(response.userShift!);
+      return;
+    }
+  }
+
+  fetchExpense(BuildContext context) async{
+    final response = await ApiProvider.instance.getAllExpenses();
+    if(response.error??true){
+      // EasyLoading.dismiss(animation: true);
+      // return;
+    }else{
+      // EasyLoading.dismiss(animation: true);
+      if (!context.mounted) {
+        return;
+      }
+      Provider.of<Repository>(context, listen: false)
+          .setOfExpenses(response.expenses);
+      return;
+    }
+  }
+
+  fetchClients(BuildContext context) async{
+    final response = await ApiProvider.instance.getClients();
+    if(response.error??true){
       EasyLoading.dismiss(animation: true);
       // return;
     }else{
@@ -104,7 +141,7 @@ class _DashboardPageState extends State<DashboardPage> {
         return;
       }
       Provider.of<Repository>(context, listen: false)
-          .setUserShift(response.userShift!);
+          .setClients(response.clients);
       return;
     }
   }
