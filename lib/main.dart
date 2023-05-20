@@ -2,6 +2,7 @@ import 'package:field_manager/Repository/Repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:open_settings_plus/open_settings_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -10,12 +11,15 @@ import 'Router/router.dart';
 import 'Storage/storage.dart';
 import 'Theme/app_theme.dart';
 
+const settingsiOS = OpenSettingsPlusIOS();
+const settingsAndroid = OpenSettingsPlusAndroid();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   LocalStorage.instance.initializeStorage();
   await dotenv.load();
   runApp(const MyApp());
-} 
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

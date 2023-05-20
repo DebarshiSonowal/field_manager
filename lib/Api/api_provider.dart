@@ -483,4 +483,48 @@ class ApiProvider {
       return GenericResponse.withError(e.message);
     }
   }
+
+  Future<GenericResponse> addClient(String name, String email, String phone,
+      String contact, String location, String city, String comment) async {
+    BaseOptions option = BaseOptions(
+        connectTimeout: const Duration(seconds: 8),
+        receiveTimeout: const Duration(seconds: 8),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ${LocalStorage.instance.token}'
+          // 'APP-KEY': ConstanceData.app_key
+        });
+    var data = {
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'contact_person': contact,
+      'address': location,
+      'city': city,
+      'comment': comment,
+    };
+    var url = "$baseUrl/$path/user/addClient";
+    dio = Dio(option);
+    debugPrint(url.toString());
+    debugPrint(jsonEncode(data));
+
+    try {
+      Response? response = await dio?.post(
+        url,
+        data: jsonEncode(data),
+      );
+      debugPrint("updateLocation Response : ${response?.data}");
+      if (response?.statusCode == 200 || response?.statusCode == 201) {
+        return GenericResponse.fromJson(response?.data);
+      } else {
+        debugPrint("updateLocation Response  error: ${response?.data}");
+        return GenericResponse.withError(
+            response?.data['message'] ?? "Something went wrong");
+      }
+    } on DioError catch (e) {
+      debugPrint("updateLocation Response error: ${e.response}");
+      return GenericResponse.withError(e.message);
+    }
+  }
 }

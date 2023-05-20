@@ -22,7 +22,7 @@ class AlertX {
         statusBarColor: Colors.transparent,
       ));
       showDialog(
-          barrierDismissible: false,
+          barrierDismissible: true,
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
